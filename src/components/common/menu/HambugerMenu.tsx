@@ -50,6 +50,12 @@ const HamburgerMenuContainer = styled(Container)`
   height: 100vh;
   background-color: #fff;
   z-index: 1001;
+
+  @media only screen and (max-width: 767px) {
+    &.ui.container {
+      margin: 0 !important;
+    }
+  }
 `;
 
 const HamburgerMenuHeader = styled.div`
@@ -143,7 +149,7 @@ const HamburgerMenu: React.FC = () => {
         <HamburgerMenuContainer>
 
           <HamburgerMenuHeader>
-            <HamburgerBtn onClick={e => setOpen(!isOpen)}></HamburgerBtn>
+            <HamburgerBtn onClick={handleClose}></HamburgerBtn>
             <MyHeader as='h1'>Let's Retina!</MyHeader>
           </HamburgerMenuHeader>
 
