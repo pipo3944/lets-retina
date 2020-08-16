@@ -4,15 +4,15 @@ import styled from '@emotion/styled';
 import getCompressImageFileAsync from "util/getCompressImageFileAsync";
 import { FileType } from "models/FileType";
 
-const VIEWER_WIDTH = 208;
-const VIEWER_HEIGHT = 208;
+const VIEWER_WIDTH = 204;
+const VIEWER_HEIGHT = 204;
 
 const isComp = false;
 
 const Wrapper = styled.div`
   width: ${VIEWER_WIDTH}px;
-  margin-bottom: 10px;
-  margin-right: 16px;
+  margin-bottom: 20px;
+  margin-right: 13px;
 `;
 
 const ViewerCanvasWrap = styled.div`
