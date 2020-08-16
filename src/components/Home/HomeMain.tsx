@@ -13,7 +13,10 @@ const HomeMain: React.FC = () => {
   const outputFilesRef = useRef<FileType[]>([]);
 
   const handleInputFiles = (files: File[]) => {
-    setInputFiles(files);
+    setInputFiles([
+      ...inputFiles,
+      ...files,
+    ]);
   };
 
   const handleNewFile = useCallback((newFile: FileType) => {
@@ -22,7 +25,6 @@ const HomeMain: React.FC = () => {
       ...outputFiles,
       newFile,
     ]);
-    console.log('aa')
   }, [inputFiles]);
 
   return (
