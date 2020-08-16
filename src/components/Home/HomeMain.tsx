@@ -1,10 +1,10 @@
 import React, { useState, useCallback, useRef } from 'react';
-import Droparea from 'components/parts/Droparea';
-import OutputArea from 'components/parts/OutputArea';
-import OutputProgress from 'components/parts/OutputProgress';
+import Droparea from 'components/Home/Droparea';
 import { FileType } from 'models/FileType';
 import BunchDownloadBtn from 'components/parts/BunchDownloadBtn';
 import { Divider, Container } from 'semantic-ui-react';
+import OutputProgress from './OutputProgress';
+import OutputArea from './OutputArea';
 
 const HomeMain: React.FC = () => {
   const [inputFiles, setInputFiles] = useState<File[]>([]);
@@ -28,7 +28,7 @@ const HomeMain: React.FC = () => {
   }, [inputFiles]);
 
   return (
-    <main>
+    <>
       <Droparea handleInputFiles={handleInputFiles} />
 
       <OutputProgress
@@ -45,7 +45,7 @@ const HomeMain: React.FC = () => {
 
         {inputFiles && <OutputArea inputFiles={inputFiles} handleNewFile={handleNewFile} />}
       </Container>
-    </main>
+    </>
   );
 };
 
