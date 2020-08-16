@@ -45,13 +45,19 @@ const Droparea: React.FC<DropareaProps> = ({
     dropareaRef.current?.classList.remove('ondrag');
 
     let inputFiles: File[] = [];
+    let addFileCount: number = 0;
     for (let i = 0; i < dropFiles.length; i++) {
-      if(i > INPUT_LIMIT - inputCount - 1) {
+      if(addFileCount + inputCount > INPUT_LIMIT - 1) {
         break;
       }
-      inputFiles.push(dropFiles[i]);
+      if(dropFiles[i].type === 'image/png'
+      || dropFiles[i].type === 'image/gif'
+      || dropFiles[i].type === 'image/jpeg') {
+        inputFiles.push(dropFiles[i]);
+        addFileCount++;
+      }
     }
-    setInputCount(inputCount => inputCount+inputFiles.length);
+    setInputCount(inputCount => inputCount+addFileCount);
 
     handleInputFiles(inputFiles);
   };
