@@ -11,7 +11,7 @@ const isComp = false;
 
 const Wrapper = styled.div`
   width: ${VIEWER_WIDTH}px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   margin-right: 13px;
 `;
 
