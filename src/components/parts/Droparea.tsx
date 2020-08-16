@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from '@emotion/styled';
 
 const INPUT_LIMIT = 20;
@@ -37,6 +37,7 @@ type DropareaProps = {
 const Droparea: React.FC<DropareaProps> = ({
   handleInputFiles,
 }) => {
+  const [inputCount, setInputCount] = useState<number>(0);
   const dropareaRef = useRef<HTMLDivElement>(null);
 
   const onDropAction = (e: React.DragEvent<HTMLDivElement>) => {
@@ -45,11 +46,12 @@ const Droparea: React.FC<DropareaProps> = ({
 
     let inputFiles: File[] = [];
     for (let i = 0; i < dropFiles.length; i++) {
-      inputFiles.push(dropFiles[i]);
-      if(i > INPUT_LIMIT-1) {
+      if(i > INPUT_LIMIT - inputCount - 1) {
         break;
       }
+      inputFiles.push(dropFiles[i]);
     }
+    setInputCount(inputCount => inputCount+inputFiles.length);
 
     handleInputFiles(inputFiles);
   };

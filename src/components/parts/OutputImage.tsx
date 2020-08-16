@@ -90,20 +90,6 @@ const MyPlaceholder = styled(Placeholder)`
   overflow: hidden;
 `;
 
-const DownloadBtn = styled.button`
-  cursor: pointer;
-  display: block;
-  width: 100%;
-  border: none;
-  outline: none;
-
-  color: #fff;
-  font-size: 12px;
-  font-weight: bold;
-  background-color: #333;
-  padding: 6px 0 7px;
-`;
-
 type OutputImageProps = {
   inputFile: File;
   handleNewFile: (newFile: FileType) => void;
