@@ -3,22 +3,22 @@ import { Placeholder, Segment } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 import getCompressImageFileAsync from "util/getCompressImageFileAsync";
 
-const VIEWER_WIDTH = 184;
-const VIEWER_HEIGHT = 184;
+const VIEWER_WIDTH = 208;
+const VIEWER_HEIGHT = 208;
 
 const isComp = false;
 
 const Wrapper = styled.div`
   width: ${VIEWER_WIDTH}px;
   margin-bottom: 10px;
-  margin-right: 15px;
+  margin-right: 16px;
 `;
 
 const ViewerCanvasWrap = styled.div`
   cursor: pointer;
   position: relative;
+  border-radius: 8px;
   overflow: hidden;
-  margin-bottom: 8px;
 
   * {
     transition: all .3s;
@@ -33,14 +33,14 @@ const ViewerCanvasWrap = styled.div`
     height: 100%;
     top: 0;
     left: 0;
-    background-color: #c3fff4;
+    background-color: #f7ed8e;
     opacity: 0;
     transition: all .3s;
   }
 
   &::after {
     content: 'DOWNLOAD';
-    color: #5C7C83;
+    color: #444;
     font-weight: bold;
     position: absolute;
     z-index: 1;
@@ -78,6 +78,17 @@ const ViewerCanvas = styled.canvas`
   }
 `;
 
+const ViewerInfo = styled.span`
+  display: inline-block;
+  color: #666;
+  margin-top: 8px;
+`;
+
+const MyPlaceholder = styled(Placeholder)`
+  border-radius: 8px;
+  overflow: hidden;
+`;
+
 const DownloadBtn = styled.button`
   cursor: pointer;
   display: block;
@@ -112,7 +123,7 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
   * 画像を偶数化してcanvasに挿入したり
   * 
   */
-  const imgToEven = (file: File | Blob) => {
+  const imgToEven = async (file: File | Blob) => {
     var image = new Image();
     var reader = new FileReader();
 
@@ -257,14 +268,14 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
       </ViewerCanvasWrap>
       
       {blob === undefined && (
-        <Placeholder style={{ height: `${VIEWER_HEIGHT}px`, width: `${VIEWER_WIDTH}px` }}>
+        <MyPlaceholder style={{ height: `${VIEWER_HEIGHT}px`, width: `${VIEWER_WIDTH}px` }}>
           <Placeholder.Image />
-        </Placeholder>
+        </MyPlaceholder>
       )}
 
       {(() => {
         if(newWidth && newHeight) {
-          return <span>{newWidth} x {newHeight}</span>;
+          return <ViewerInfo><b>{newWidth}</b> x <b>{newHeight}</b></ViewerInfo>;
         }
       })()}
       

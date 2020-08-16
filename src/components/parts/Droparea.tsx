@@ -1,22 +1,25 @@
 import React, { useRef, useCallback } from 'react';
 import styled from '@emotion/styled';
 
+const INPUT_LIMIT = 20;
+
 const DropArea = styled.div`
   height: 300px;
   margin: 0 auto 30px;
-  background-color: #E1F4F1;
-  color: #ABBABD;
+  background-color: rgb(247, 237, 142);
+  background: linear-gradient(to top, #f7ed8e, #FED78A);
+  color: #fd9d2c;
+  font-weight: bold;
   position: relative;
-  transition: all .3s;
+  transition: all .6s;
 
   &.ondrag {
-    font-weight: bold;
-    background-color: #A6F4E6;
-    color: #5C7C83;
+    background: linear-gradient(to top, #F4E666, #FECF72);
+    font-size: 15px;
   }
 
   &:before {
-    content: '画像をドロップしてください（複数可）';
+    content: 'Drop images here (up to 20)';
     position: absolute;
 
     display: inline-block;
@@ -43,6 +46,9 @@ const Droparea: React.FC<DropareaProps> = ({
     let inputFiles: File[] = [];
     for (let i = 0; i < dropFiles.length; i++) {
       inputFiles.push(dropFiles[i]);
+      if(i > INPUT_LIMIT-1) {
+        break;
+      }
     }
 
     handleFiles(inputFiles);

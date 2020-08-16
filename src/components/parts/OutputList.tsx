@@ -10,7 +10,7 @@ const OutputList = styled.div`
   box-sizing: border-box;
   border-top: solid 1px #999;
 
-  max-width: 1120px;
+  max-width: 1160px;
   width: 100%;
   margin: 0 auto;
 `;
@@ -22,16 +22,6 @@ type OutputAreaProps = {
 const OutputArea: React.FC<OutputAreaProps> = ({
   inputFiles,
 }) => {
-  const [outputFiles, setOutputFiles] = useState<FileList>();
-
-  useEffect(() => {
-    // inputFiles
-  }, []);
-
-  const handleFiles = (files: File[]) => {
-    console.dir(files);
-  };
-
   return (
     <OutputList>
       {inputFiles.map((inputFile, index) => {
