@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef } from 'react';
 import styled from '@emotion/styled';
 
 const INPUT_LIMIT = 20;
@@ -31,11 +31,11 @@ const DropArea = styled.div`
 `;
 
 type DropareaProps = {
-  handleFiles: (files: File[]) => void;
+  handleInputFiles: (files: File[]) => void;
 };
 
 const Droparea: React.FC<DropareaProps> = ({
-  handleFiles,
+  handleInputFiles,
 }) => {
   const dropareaRef = useRef<HTMLDivElement>(null);
 
@@ -51,7 +51,7 @@ const Droparea: React.FC<DropareaProps> = ({
       }
     }
 
-    handleFiles(inputFiles);
+    handleInputFiles(inputFiles);
   };
 
   return (

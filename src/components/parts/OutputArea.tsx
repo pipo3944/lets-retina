@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import styled from '@emotion/styled';
 import OutputImage from './OutputImage';
+import { FileType } from 'models/FileType';
 
 const OutputList = styled.div`
   display: flex;
@@ -8,19 +9,16 @@ const OutputList = styled.div`
   align-items: flex-start;
   padding: 40px 20px;
   box-sizing: border-box;
-  border-top: solid 1px #999;
-
-  max-width: 1160px;
-  width: 100%;
-  margin: 0 auto;
 `;
 
 type OutputAreaProps = {
   inputFiles: File[];
+  handleNewFile: (newBlob: FileType) => void;
 };
 
 const OutputArea: React.FC<OutputAreaProps> = ({
   inputFiles,
+  handleNewFile,
 }) => {
   return (
     <OutputList>
@@ -28,6 +26,7 @@ const OutputArea: React.FC<OutputAreaProps> = ({
         return <OutputImage
           key={index}
           inputFile={inputFile}
+          handleNewFile={handleNewFile}
           />
       })}
     </OutputList>

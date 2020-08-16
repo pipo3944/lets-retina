@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Placeholder, Segment } from 'semantic-ui-react';
+import { Placeholder } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 import getCompressImageFileAsync from "util/getCompressImageFileAsync";
+import { FileType } from "models/FileType";
 
 const VIEWER_WIDTH = 208;
 const VIEWER_HEIGHT = 208;
@@ -104,13 +105,15 @@ const DownloadBtn = styled.button`
 `;
 
 type OutputImageProps = {
-  inputFile: File,
+  inputFile: File;
+  handleNewFile: (newFile: FileType) => void;
 };
 
 const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
   inputFile,
+  handleNewFile,
 }) => {
-  const [compFile, setCompFile] = useState<File | Blob>();
+  const [compFile, setCompFile] = useState<File>();
   const [blob, setBlob] = useState<Blob>();
 
   const [newWidth, setNewWidth] = useState<number | undefined>();
@@ -123,7 +126,7 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
   * 画像を偶数化してcanvasに挿入したり
   * 
   */
-  const imgToEven = async (file: File | Blob) => {
+  const imgToEven = async (file: File) => {
     var image = new Image();
     var reader = new FileReader();
 
@@ -195,14 +198,20 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
             barr[i] = bin.charCodeAt(i);
             i++;
           }
-          var blob = new Blob([barr], { type: inputFile.type });
+
+          // 出力用のblobを作成
+          const blob = new Blob([barr], { type: inputFile.type });
           setBlob(blob);
+          handleNewFile({
+            name: file.name,
+            blob: blob,
+          });
 
           // 表示用の画像を当て込み
           const maxSize = Math.max(viewerWidth, viewerHeight);
           viewerCanvasRef.current.setAttribute('width', String(viewerWidth));
           viewerCanvasRef.current.setAttribute('height', String(viewerHeight));
-          var viewerCtx = viewerCanvasRef.current.getContext('2d');
+          const viewerCtx = viewerCanvasRef.current.getContext('2d');
           if (!viewerCtx) return;
           // canvasに既に描画されている画像をクリア
           viewerCtx.clearRect(0, 0, maxSize, maxSize);
@@ -228,7 +237,7 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
         const compedFile = await getCompressImageFileAsync(inputFile);
 
         if(!cleanedUp) {
-          setCompFile(compedFile);
+          setCompFile(compedFile as File);
         }
       };
       comp();
