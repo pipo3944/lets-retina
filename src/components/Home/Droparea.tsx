@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import styled from '@emotion/styled';
 
-const INPUT_LIMIT = 20;
+const INPUT_LIMIT = 100;
 
 const DropArea = styled.div`
   height: 300px;
@@ -19,7 +19,7 @@ const DropArea = styled.div`
   }
 
   &:before {
-    content: 'Drop images here (up to 20)';
+    content: 'Drop images here (up to ${INPUT_LIMIT})';
     position: absolute;
 
     display: inline-block;
