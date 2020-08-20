@@ -3,6 +3,7 @@ import { Placeholder } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 import getCompressImageFileAsync from "util/getCompressImageFileAsync";
 import { FileType } from "models/FileType";
+import { ExtensionOutputSetting, allowExtentions, horizonValues, verticalValues, EX } from "models/OutputSettingType";
 
 const VIEWER_WIDTH = 204;
 const VIEWER_HEIGHT = 204;
@@ -92,11 +93,15 @@ const MyPlaceholder = styled(Placeholder)`
 
 type OutputImageProps = {
   inputFile: File;
+  exSetting: EX;
+  extendSettings: ExtensionOutputSetting[];
   handleNewFile: (newFile: FileType) => void;
 };
 
 const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
   inputFile,
+  exSetting,
+  extendSettings,
   handleNewFile,
 }) => {
   const [compFile, setCompFile] = useState<File>();
@@ -107,6 +112,8 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
 
   const outputCanvasRef = useRef({} as HTMLCanvasElement);
   const viewerCanvasRef = useRef({} as HTMLCanvasElement);
+
+  console.log(`ex: ${exSetting}`)
 
   /*
   * 画像を偶数化してcanvasに挿入したり
@@ -121,23 +128,83 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
 
         if (outputCanvasRef && outputCanvasRef.current && viewerCanvasRef && viewerCanvasRef.current) {
           let outputWidth, outputHeight, viewerWidth, viewerHeight;
+          let sx = 0, sy = 0, dx = 0, dy = 0;
 
           /*
           * 偶数化
           *
           */
           if (image.width % 2 !== 0) {
-            outputWidth = image.width + 1;
+            if(exSetting === EX.EXPANTION) {
+              outputWidth = image.width + 1;
+            } else {
+              const thisSetting = extendSettings.find(setting => setting.extention === file.type);
+              if(thisSetting) {
+                switch (thisSetting.value.horizon) {
+                  case horizonValues.AL:
+                    sx = 0;
+                    dx = 1;
+                    outputWidth = image.width + 1;
+                    break;
+                  case horizonValues.AR:
+                    sx = 0;
+                    dx = 0;
+                    outputWidth = image.width + 1;
+                    break;
+                  case horizonValues.RL:
+                    sx = 1;
+                    dx = 0;
+                    outputWidth = image.width - 1;
+                    break;
+                  case horizonValues.RR:
+                    sx = 0;
+                    dx = 0;
+                    outputWidth = image.width - 1;
+                    break;
+                }
+              } else {
+                outputWidth = image.width + 1;
+              }
+            }
           } else {
             outputWidth = image.width;
           }
-
           if (image.height % 2 !== 0) {
-            outputHeight = image.height + 1;
+            if(exSetting === EX.EXPANTION) {
+              outputHeight = image.height + 1;
+            } else {
+              const thisSetting = extendSettings.find(setting => setting.extention === file.type);
+              if(thisSetting) {
+                switch (thisSetting.value.vertical) {
+                  case verticalValues.AT:
+                    sy = 0;
+                    dy = 1;
+                    outputHeight = image.height + 1;
+                    break;
+                  case verticalValues.AB:
+                    sy = 0;
+                    dy = 0;
+                    outputHeight = image.height + 1;
+                    break;
+                  case verticalValues.RT:
+                    sy = 1;
+                    dy = 0;
+                    outputHeight = image.height - 1;
+                    break;
+                  case verticalValues.RB:
+                    sy = 0;
+                    dy = 0;
+                    outputHeight = image.height - 1;
+                    break;
+                }
+              } else {
+                outputHeight = image.height + 1;
+              }
+            }
           } else {
             outputHeight = image.height;
           }
-
+          
           // 偶数化された画像を作成
           if (outputWidth > outputHeight) {
             // 横長の画像は横のサイズを指定値にあわせる
@@ -163,7 +230,21 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
           // 出力用canvasに既に描画されている画像をクリア
           ctx.clearRect(0, 0, outputWidth, outputHeight);
           // 偶数化された画像を出力用canvasに描画
-          ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, outputWidth, outputHeight);
+          if(exSetting === EX.EXPANTION) {
+            ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, outputWidth, outputHeight);
+          } else {
+            ctx.drawImage(
+              image,
+              sx,
+              sy,
+              outputWidth,
+              outputHeight,
+              dx,
+              dy,
+              outputWidth,
+              outputHeight
+            );
+          }
 
           setNewWidth(outputWidth);
           setNewHeight(outputHeight);
@@ -200,9 +281,24 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
           const viewerCtx = viewerCanvasRef.current.getContext('2d');
           if (!viewerCtx) return;
           // canvasに既に描画されている画像をクリア
-          viewerCtx.clearRect(0, 0, maxSize, maxSize);
+          viewerCtx.clearRect(0, 0, viewerWidth, viewerHeight);
           // canvasにサムネイルを描画
-          viewerCtx.drawImage(image, 0, 0, image.width, image.height, 0, 0, viewerWidth, viewerHeight);
+          // viewerCtx.drawImage(image, 0, 0, image.width, image.height, 0, 0, viewerWidth, viewerHeight);
+          if(exSetting === EX.EXPANTION) {
+            viewerCtx.drawImage(image, 0, 0, image.width, image.height, 0, 0, viewerWidth, viewerHeight);
+          } else {
+            viewerCtx.drawImage(
+              image,
+              sx,
+              sy,
+              outputWidth,
+              outputHeight,
+              dx * viewerWidth/outputWidth,
+              dy * viewerHeight/outputHeight,
+              viewerWidth,
+              viewerHeight
+            );
+          }
 
           viewerCanvasRef.current.classList.add('active');
         }

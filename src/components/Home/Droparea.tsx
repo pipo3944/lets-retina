@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import styled from '@emotion/styled';
+import { ExtensionOutputSetting, allowExtentions } from 'models/OutputSettingType';
 
 const INPUT_LIMIT = 100;
 
@@ -19,7 +20,7 @@ const DropArea = styled.div`
   }
 
   &:before {
-    content: 'Drop images here (up to ${INPUT_LIMIT})';
+    content: 'ここに画像をドラッグ&ドロップしてね！ (上限：${INPUT_LIMIT})';
     position: absolute;
 
     display: inline-block;
@@ -50,9 +51,9 @@ const Droparea: React.FC<DropareaProps> = ({
       if(addFileCount + inputCount > INPUT_LIMIT - 1) {
         break;
       }
-      if(dropFiles[i].type === 'image/png'
-      || dropFiles[i].type === 'image/gif'
-      || dropFiles[i].type === 'image/jpeg') {
+      if(dropFiles[i].type === allowExtentions.JPG
+      || dropFiles[i].type === allowExtentions.PNG
+      || dropFiles[i].type === allowExtentions.GIF) {
         inputFiles.push(dropFiles[i]);
         addFileCount++;
       }

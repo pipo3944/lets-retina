@@ -14,7 +14,7 @@ function App() {
       <div className="App">
         <Switch>
           <Route path={paths.home} component={Home} exact />
-          <Route path={paths.policy} component={Policy} />
+          {/* <Route path={paths.policy} component={Policy} /> */}
 
           <Redirect to={paths.home} />
         </Switch>
