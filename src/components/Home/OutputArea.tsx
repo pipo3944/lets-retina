@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import styled from '@emotion/styled';
 import OutputImage from './OutputImage';
 import { FileType } from 'models/FileType';
+import { ExtensionOutputSetting, EX } from 'models/OutputSettingType';
 
 const OutputList = styled.div`
   display: flex;
@@ -13,11 +14,15 @@ const OutputList = styled.div`
 
 type OutputAreaProps = {
   inputFiles: File[];
+  exSetting: EX;
+  extendSettings: ExtensionOutputSetting[];
   handleNewFile: (newBlob: FileType) => void;
 };
 
 const OutputArea: React.FC<OutputAreaProps> = ({
   inputFiles,
+  exSetting,
+  extendSettings,
   handleNewFile,
 }) => {
   return (
@@ -26,6 +31,8 @@ const OutputArea: React.FC<OutputAreaProps> = ({
         return <OutputImage
           key={index}
           inputFile={inputFile}
+          exSetting={exSetting}
+          extendSettings={extendSettings}
           handleNewFile={handleNewFile}
           />
       })}

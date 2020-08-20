@@ -157,7 +157,7 @@ const HamburgerMenu: React.FC = () => {
 
           <List>
             <MyLink to={paths.home}>ホーム</MyLink>
-            <MyLink to={paths.policy}>利用規約</MyLink>
+            {/* <MyLink to={paths.policy}>利用規約</MyLink> */}
             <MyExternalLink href={'https://forms.gle/Zh1Y1egrBFHnBdvB9'} target="_blank">お問い合わせ</MyExternalLink>
           </List>
 

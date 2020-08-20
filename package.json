@@ -1,6 +1,6 @@
 {
   "name": "lets-retina",
-  "version": "0.1.5",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@emotion/core": "^10.0.34",
