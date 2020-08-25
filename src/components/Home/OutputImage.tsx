@@ -5,6 +5,8 @@ import getCompressImageFileAsync from "util/getCompressImageFileAsync";
 import { FileType } from "models/FileType";
 import { ExtensionOutputSetting, allowExtentions, horizonValues, verticalValues, EX } from "models/OutputSettingType";
 
+import resizedIcon from '../../assets/img/ic-resized.svg';
+
 const VIEWER_WIDTH = 204;
 const VIEWER_HEIGHT = 204;
 
@@ -14,6 +16,35 @@ const Wrapper = styled.div`
   width: ${VIEWER_WIDTH}px;
   margin-bottom: 20px;
   margin-right: 13px;
+
+  position: relative;
+
+  &.resized::before {
+    content: '';
+
+    background-color: #fff;
+    border-radius: 100%;
+    
+    position: absolute;
+    z-index: 1;
+    width: 32px;
+    height: 32px;
+    top: 0;
+    right: 0;
+    transform: translate(23%, -24%);
+  }
+  &.resized::after {
+    content: '';
+    background-image: url(${resizedIcon});
+    background-size: contain;
+    
+    position: absolute;
+    z-index: 2;
+    width: 16px;
+    height: 16px;
+    top: 2px;
+    right: 2px;
+  }
 `;
 
 const ViewerCanvasWrap = styled.div`
@@ -84,6 +115,7 @@ const ViewerInfo = styled.span`
   display: inline-block;
   color: #666;
   margin-top: 8px;
+  line-height: 1.2;
 `;
 
 const MyPlaceholder = styled(Placeholder)`
@@ -106,22 +138,24 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
 }) => {
   const [compFile, setCompFile] = useState<File>();
   const [blob, setBlob] = useState<Blob>();
+  const [isResized, setResized] = useState<boolean>(false);
 
   const [newWidth, setNewWidth] = useState<number | undefined>();
   const [newHeight, setNewHeight] = useState<number | undefined>();
+  const [oriWidth, setOriWidth] = useState<number | undefined>();
+  const [oriHeight, setOriHeight] = useState<number | undefined>();
 
   const outputCanvasRef = useRef({} as HTMLCanvasElement);
   const viewerCanvasRef = useRef({} as HTMLCanvasElement);
-
-  console.log(`ex: ${exSetting}`)
+  const wrapperRef = useRef({} as HTMLDivElement);
 
   /*
   * 画像を偶数化してcanvasに挿入したり
   * 
   */
   const imgToEven = async (file: File) => {
-    var image = new Image();
-    var reader = new FileReader();
+    const image = new Image();
+    const reader = new FileReader();
 
     reader.onload = function (e) {
       image.onload = function () {
@@ -130,11 +164,17 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
           let outputWidth, outputHeight, viewerWidth, viewerHeight;
           let sx = 0, sy = 0, dx = 0, dy = 0;
 
+          setOriWidth(image.width);
+          setOriHeight(image.height);
+
           /*
           * 偶数化
           *
           */
           if (image.width % 2 !== 0) {
+            setResized(true);
+            wrapperRef.current.classList.add('resized');
+
             if(exSetting === EX.EXPANTION) {
               outputWidth = image.width + 1;
             } else {
@@ -170,6 +210,9 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
             outputWidth = image.width;
           }
           if (image.height % 2 !== 0) {
+            setResized(true);
+            wrapperRef.current.classList.add('resized');
+
             if(exSetting === EX.EXPANTION) {
               outputHeight = image.height + 1;
             } else {
@@ -266,8 +309,10 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
             i++;
           }
 
-          // 出力用のblobを作成
-          const blob = new Blob([barr], { type: inputFile.type });
+          // 出力用のblobを作成（サイズ変更がない場合は受け取りデータそのまま）
+          const blob = isResized
+            ? new Blob([barr], { type: inputFile.type })
+            : inputFile;
           setBlob(blob);
           handleNewFile({
             name: file.name,
@@ -347,7 +392,7 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
   }
 
   return (
-    <Wrapper>
+    <Wrapper ref={wrapperRef}>
       {/* 画像作成用キャンバス（表示はしない） */}
       <canvas ref={outputCanvasRef} width='0' height='0' style={{ display: "none" }} />
       
@@ -365,8 +410,20 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
       )}
 
       {(() => {
-        if(newWidth && newHeight) {
-          return <ViewerInfo><b>{newWidth}</b> x <b>{newHeight}</b></ViewerInfo>;
+        if(isResized && newWidth && newHeight) {
+          return (
+            <ViewerInfo>
+              {oriWidth} x {oriHeight}<br/>
+              ↓<br/>
+              <b>{newWidth}</b> x <b>{newHeight}</b>
+            </ViewerInfo>
+          );
+        } else {
+          return (
+            <ViewerInfo>
+              {oriWidth} x {oriHeight}
+            </ViewerInfo>
+          );
         }
       })()}
       
