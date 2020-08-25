@@ -81,7 +81,7 @@ const HomeMain: React.FC = () => {
         <Header as="h2">Welcome to Let's Retina!</Header>
         <HeadParagrapf>
           このページでは、Retinaページ制作に必要な偶数サイズの画像を生成します。<br/>
-          偶数化したい画像を下のエリアにドラッグ＆ドロップすると、画像が奇数サイズだった場合に1px調整して偶数化してくれます。
+          偶数化したい画像を下のエリアにドラッグ＆ドロップすると、画像が奇数サイズだった場合に1px調整してリサイズします。
         </HeadParagrapf>
       </HeadContainer>
 
