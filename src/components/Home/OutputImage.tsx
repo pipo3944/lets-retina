@@ -113,8 +113,6 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
   const outputCanvasRef = useRef({} as HTMLCanvasElement);
   const viewerCanvasRef = useRef({} as HTMLCanvasElement);
 
-  console.log(`ex: ${exSetting}`)
-
   /*
   * 画像を偶数化してcanvasに挿入したり
   * 
