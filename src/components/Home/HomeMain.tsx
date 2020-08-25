@@ -7,6 +7,15 @@ import OutputProgress from './OutputProgress';
 import OutputArea from './OutputArea';
 import OutputSettings from './OutoutSettings';
 import { OutputSetting, horizonValues, verticalValues, ExtensionOutputSetting, EX } from 'models/OutputSettingType';
+import styled from '@emotion/styled';
+
+const HeadContainer = styled(Container)`
+  padding: 36px 0;
+`;
+
+const HeadParagrapf = styled.p`
+  line-height: 1.5;
+`;
 
 const defaultExtensitonOutputSetting: ExtensionOutputSetting[]  = [
   {
@@ -68,6 +77,14 @@ const HomeMain: React.FC = () => {
 
   return (
     <>
+      <HeadContainer textAlign="center">
+        <Header as="h2">Welcome to Let's Retina!</Header>
+        <HeadParagrapf>
+          このページでは、Retinaページ制作に必要な偶数サイズの画像を生成します。<br/>
+          偶数化したい画像を下のエリアにドラッグ＆ドロップすると、画像が奇数サイズだった場合に1px調整してリサイズします。
+        </HeadParagrapf>
+      </HeadContainer>
+
       <Droparea handleInputFiles={handleInputFiles} />
 
       <OutputProgress
