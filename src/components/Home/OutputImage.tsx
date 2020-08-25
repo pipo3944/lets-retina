@@ -120,8 +120,8 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
   * 
   */
   const imgToEven = async (file: File) => {
-    var image = new Image();
-    var reader = new FileReader();
+    const image = new Image();
+    const reader = new FileReader();
 
     reader.onload = function (e) {
       image.onload = function () {
@@ -129,12 +129,15 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
         if (outputCanvasRef && outputCanvasRef.current && viewerCanvasRef && viewerCanvasRef.current) {
           let outputWidth, outputHeight, viewerWidth, viewerHeight;
           let sx = 0, sy = 0, dx = 0, dy = 0;
+          let isResized = false;
 
           /*
           * 偶数化
           *
           */
           if (image.width % 2 !== 0) {
+            isResized = true;
+
             if(exSetting === EX.EXPANTION) {
               outputWidth = image.width + 1;
             } else {
@@ -170,6 +173,8 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
             outputWidth = image.width;
           }
           if (image.height % 2 !== 0) {
+            isResized = true;
+
             if(exSetting === EX.EXPANTION) {
               outputHeight = image.height + 1;
             } else {
@@ -266,8 +271,10 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
             i++;
           }
 
-          // 出力用のblobを作成
-          const blob = new Blob([barr], { type: inputFile.type });
+          // 出力用のblobを作成（サイズ変更がない場合は受け取りデータそのまま）
+          const blob = isResized
+            ? new Blob([barr], { type: inputFile.type })
+            : inputFile;
           setBlob(blob);
           handleNewFile({
             name: file.name,
