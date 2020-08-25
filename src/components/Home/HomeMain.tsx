@@ -2,7 +2,7 @@ import React, { useState, useCallback, useRef } from 'react';
 import Droparea from 'components/Home/Droparea';
 import { FileType } from 'models/FileType';
 import BunchDownloadBtn from 'components/parts/BunchDownloadBtn';
-import { Divider, Container, Form } from 'semantic-ui-react';
+import { Divider, Container, Form, Header } from 'semantic-ui-react';
 import OutputProgress from './OutputProgress';
 import OutputArea from './OutputArea';
 import OutputSettings from './OutoutSettings';
@@ -82,16 +82,16 @@ const HomeMain: React.FC = () => {
           && <BunchDownloadBtn outputFiles={outputFiles} />
         }
 
-        {inputFiles &&
-          <OutputArea
-            inputFiles={inputFiles}
-            exSetting={outputExSetting}
-            extendSettings={outputExtendSettings}
-            handleNewFile={handleNewFile} />
+        {inputFiles &&　<OutputArea
+          inputFiles={inputFiles}
+          exSetting={outputExSetting}
+          extendSettings={outputExtendSettings}
+          handleNewFile={handleNewFile} />
         }
       </Container>
 
       <Container textAlign="left">
+        <Header as='h2'>出力設定</Header>
         <OutputSettings
           exSetting={outputExSetting}
           extendSettings={outputExtendSettings}
