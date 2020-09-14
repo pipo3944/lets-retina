@@ -163,6 +163,7 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
         if (outputCanvasRef && outputCanvasRef.current && viewerCanvasRef && viewerCanvasRef.current) {
           let outputWidth, outputHeight, viewerWidth, viewerHeight;
           let sx = 0, sy = 0, dx = 0, dy = 0;
+          let resized = false;
 
           setOriWidth(image.width);
           setOriHeight(image.height);
@@ -173,6 +174,7 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
           */
           if (image.width % 2 !== 0) {
             setResized(true);
+            resized = true;
             wrapperRef.current.classList.add('resized');
 
             if(exSetting === EX.EXPANTION) {
@@ -211,6 +213,7 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
           }
           if (image.height % 2 !== 0) {
             setResized(true);
+            resized = true;
             wrapperRef.current.classList.add('resized');
 
             if(exSetting === EX.EXPANTION) {
@@ -310,7 +313,7 @@ const OutputImage: React.FC<Readonly<OutputImageProps>> = ({
           }
 
           // 出力用のblobを作成（サイズ変更がない場合は受け取りデータそのまま）
-          const blob = isResized
+          const blob = resized
             ? new Blob([barr], { type: inputFile.type })
             : inputFile;
           setBlob(blob);
